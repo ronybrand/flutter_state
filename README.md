@@ -148,7 +148,8 @@ git-ignored).
 keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 \
         -validity 10000 -alias upload
 
-# 2. Point the build at it
+# 2. Point the build at it. keytool makes a PKCS12 keystore, where the key password is
+#    the keystore password: use the same value for both in key.properties.
 cp android/key.properties.example android/key.properties   # then fill it in
 
 # 3. Build the bundle to upload to Google Play (the build number must grow every time)
@@ -168,7 +169,7 @@ from these repository secrets and attaches it as an artifact:
 | --------------------------- | ----------------------------------------------------------- |
 | `ANDROID_KEYSTORE_BASE64`   | `base64 -w0 ~/upload-keystore.jks`                          |
 | `ANDROID_KEYSTORE_PASSWORD` | the keystore password                                       |
-| `ANDROID_KEY_PASSWORD`      | the key password                                            |
+| `ANDROID_KEY_PASSWORD`      | the key password (the same as the keystore's, see below)    |
 | `ANDROID_KEY_ALIAS`         | `upload`                                                    |
 
 The regular CI proves this wiring on every push with a **throwaway key** (the real one is never

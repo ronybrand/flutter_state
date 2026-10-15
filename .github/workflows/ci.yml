@@ -83,17 +83,18 @@ jobs:
           fi
           grep -q "Refusing to build a release app bundle" bundle.log
 
+      # keytool makes PKCS12 keystores, where the key password must equal the keystore password.
       - name: Create a throwaway key and point key.properties at it
         run: |
           keytool -genkeypair -keystore "$RUNNER_TEMP/ci.jks" \
-            -storepass ci-store-pass -keypass ci-key-pass -alias ci \
+            -storepass ci-pass -keypass ci-pass -alias ci \
             -keyalg RSA -keysize 2048 -validity 1 \
             -dname "CN=CI Throwaway, O=flutter_state"
-          scripts/ci/write-key-properties.sh
+          bash scripts/ci/write-key-properties.sh
         env:
           KEYSTORE_PATH: ${{ runner.temp }}/ci.jks
-          KEYSTORE_PASSWORD: ci-store-pass
-          KEY_PASSWORD: ci-key-pass
+          KEYSTORE_PASSWORD: ci-pass
+          KEY_PASSWORD: ci-pass
           KEY_ALIAS: ci
 
       - name: A release APK is signed with that key, not the debug one

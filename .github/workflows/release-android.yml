@@ -47,7 +47,7 @@ jobs:
             exit 1
           fi
           echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload-keystore.jks"
-          KEYSTORE_PATH="$RUNNER_TEMP/upload-keystore.jks" scripts/ci/write-key-properties.sh
+          KEYSTORE_PATH="$RUNNER_TEMP/upload-keystore.jks" bash scripts/ci/write-key-properties.sh
 
       - name: Build the signed app bundle
         run: flutter build appbundle --release --build-number=${{ inputs.build_number }}

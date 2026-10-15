@@ -4,8 +4,10 @@
 # Create the upload key once, and keep a backup somewhere safe:
 #   keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 \
 #           -validity 10000 -alias upload
+# keytool creates PKCS12 keystores, where the key password is the keystore password:
+# use the same value for both.
 storePassword=<password of the keystore>
-keyPassword=<password of the key>
+keyPassword=<the same password>
 keyAlias=upload
 # Absolute path, or relative to android/app
 storeFile=/home/you/upload-keystore.jks
