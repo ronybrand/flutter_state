@@ -1,0 +1,63 @@
+name: Release (Android)
+
+# Builds the signed app bundle to upload to Google Play. Run by hand: a release is a
+# decision, not a side effect of a push.
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: >-
+          versionCode. Google Play rejects an upload whose build number is not higher
+          than the last one, so it must grow with every release.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: 3.47.7
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter test
+
+      - name: Restore the upload key from repository secrets
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "::error::Secret ANDROID_KEYSTORE_BASE64 is not set (see the README, 'Release signing')."
+            exit 1
+          fi
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload-keystore.jks"
+          KEYSTORE_PATH="$RUNNER_TEMP/upload-keystore.jks" bash scripts/ci/write-key-properties.sh
+
+      - name: Build the signed app bundle
+        run: flutter build appbundle --release --build-number=${{ inputs.build_number }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release-${{ inputs.build_number }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 14
+
+      - name: Remove the key from the runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload-keystore.jks" android/key.properties
