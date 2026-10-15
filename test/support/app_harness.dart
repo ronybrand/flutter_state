@@ -4,6 +4,7 @@ import 'package:flutter_state/app.dart';
 import 'package:flutter_state/core/token_store.dart';
 import 'package:flutter_state/data/info_repository.dart';
 import 'package:flutter_state/providers.dart';
+import 'package:flutter_state/router.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fakes.dart';
@@ -11,18 +12,21 @@ import 'fakes.dart';
 /// The whole app: real router and providers, with the network replaced by
 /// whatever [overrides] provide.
 class AppHarness {
-  AppHarness({String? token, List<Override> overrides = const []})
-    : keychain = FakeKeyValueStore(),
-      _overrides = overrides {
+  AppHarness({String? token, this.overrides = const []})
+    : keychain = FakeKeyValueStore() {
     tokens = SecureTokenStore(keychain);
     if (token != null) keychain.values[tokenKey] = token;
   }
 
   final FakeKeyValueStore keychain;
   late final SecureTokenStore tokens;
-  final List<Override> _overrides;
+  final List<Override> overrides;
 
-  Future<void> pump(WidgetTester tester, {String location = '/'}) async {
+  Future<void> pump(
+    WidgetTester tester, {
+    String location = '/',
+    bool settle = true,
+  }) async {
     await tokens.load();
     await tester.pumpWidget(
       ProviderScope(
@@ -36,11 +40,11 @@ class AppHarness {
             (ref) async =>
                 BackendInfo(commit: 'def5678', time: DateTime(2026, 1, 2, 3)),
           ),
-          ..._overrides,
+          ...overrides,
         ],
         child: const EstadosApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    if (settle) await tester.pumpAndSettle();
   }
 }
