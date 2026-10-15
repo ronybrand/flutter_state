@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The template only declares INTERNET for debug and profile builds. Without
+         it here a release build cannot reach the API at all. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="flutter_state"
+        android:label="Estados"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
