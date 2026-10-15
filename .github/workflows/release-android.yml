@@ -22,8 +22,8 @@ jobs:
   bundle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -52,7 +52,7 @@ jobs:
       - name: Build the signed app bundle
         run: flutter build appbundle --release --build-number=${{ inputs.build_number }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: app-release-${{ inputs.build_number }}
           path: build/app/outputs/bundle/release/app-release.aab
