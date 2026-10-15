@@ -50,7 +50,6 @@ void main() {
     ).thenAnswer((_) async => (await pending.future).cast());
     await AppHarness(overrides: overrides()).pump(tester, settle: false);
     await tester.pump();
-    expect(find.bySemanticsLabel('Loading'), findsNothing); // semantics off
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
     pending.complete([sp, rj]);
@@ -85,19 +84,46 @@ void main() {
         search: any(named: 'search'),
         sort: any(named: 'sort'),
       ),
-    ).thenThrow(
-      DioException(
-        requestOptions: RequestOptions(path: '/estado/paginado'),
-        response: Response(
+    ).thenAnswer(
+      (_) => Future.error(
+        DioException(
           requestOptions: RequestOptions(path: '/estado/paginado'),
-          statusCode: 500,
-          data: {'requestId': id},
+          response: Response(
+            requestOptions: RequestOptions(path: '/estado/paginado'),
+            statusCode: 500,
+            data: {'requestId': id},
+          ),
         ),
       ),
     );
     await AppHarness(overrides: overrides()).pump(tester);
     expect(find.text('Failed to fetch states.'), findsOneWidget);
     expect(find.text('Reference ID: $id'), findsOneWidget);
+    // An error is not an empty list, and must not look like one (nor spin forever).
+    expect(find.text('No states registered.'), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('lets the user retry after a load failure', (tester) async {
+    when(
+      () => repository.list(
+        search: any(named: 'search'),
+        sort: any(named: 'sort'),
+      ),
+    ).thenAnswer(
+      (_) => Future.error(
+        DioException(requestOptions: RequestOptions(path: '/estado/paginado')),
+      ),
+    );
+    await AppHarness(overrides: overrides()).pump(tester);
+    expect(find.byKey(const Key('retry')), findsOneWidget);
+
+    stubList([sp, rj]);
+    await tester.tap(find.byKey(const Key('retry')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('São Paulo'), findsOneWidget);
+    expect(find.byKey(const Key('retry')), findsNothing);
   });
 
   testWidgets('opens the create screen from "New state" (with a session)', (
