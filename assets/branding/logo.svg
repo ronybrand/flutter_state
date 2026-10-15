@@ -1,0 +1,12 @@
+<!-- Source of the app icon: a map pin on the brand green (#155e63).
+     The PNGs next to it are this drawing exported at 1024x1024:
+       icon.png             as is (full-bleed; iOS and old Android)
+       icon_foreground.png  only the pin, white, scaled 1.3x around the centre (Android adaptive icon)
+       icon_monochrome.png  only the pin, black, scaled 1.3x (Android 13 themed icons)
+       splash.png           only the pin, white, scaled 0.78x (native splash, Android 12 splash icon)
+     The hole is a real (evenodd) cut-out, so it is transparent in the variants without a background. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#155e63"/>
+  <path fill="#ffffff" fill-rule="evenodd"
+        d="M512 180 C374 180 262 292 262 430 C262 590 430 720 512 840 C594 720 762 590 762 430 C762 292 650 180 512 180 Z M407 430 a105 105 0 1 0 210 0 a105 105 0 1 0 -210 0 Z"/>
+</svg>

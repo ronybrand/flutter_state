@@ -1,8 +1,25 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// The upload key lives in android/key.properties, which is git-ignored (so is every
+// *.jks / *.keystore): see android/key.properties.example. Without it a release build
+// falls back to the debug key, which is fine for `flutter run --release` but is not a
+// publishable build.
+val keystorePropertiesFile = rootProject.file("key.properties")
+val hasReleaseKey = keystorePropertiesFile.exists()
+val keystoreProperties = Properties()
+if (hasReleaseKey) {
+    keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
+}
+
+fun signingProperty(name: String): String =
+    keystoreProperties.getProperty(name)
+        ?: throw GradleException("android/key.properties is missing '$name'")
 
 android {
     namespace = "com.ronybrand.flutter_state"
@@ -29,12 +46,39 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasReleaseKey) {
+            create("release") {
+                keyAlias = signingProperty("keyAlias")
+                keyPassword = signingProperty("keyPassword")
+                // Absolute, or relative to android/app.
+                storeFile = file(signingProperty("storeFile"))
+                storePassword = signingProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasReleaseKey) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
+    }
+}
+
+// An app bundle is only ever built to upload to Google Play, which rejects one
+// signed with the debug key. Fail now, with the reason, instead of producing a file
+// that fails later in the Play Console.
+gradle.taskGraph.whenReady {
+    if (!hasReleaseKey && allTasks.any { it.name == "bundleRelease" }) {
+        throw GradleException(
+            "Refusing to build a release app bundle without android/key.properties " +
+                "(it would be signed with the debug key and rejected by Google Play). " +
+                "Create the upload key and the file: see android/key.properties.example."
+        )
     }
 }
 

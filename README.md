@@ -117,6 +117,71 @@ flutter build apk --debug  # needs the Android SDK
 
 CI runs format, analyze, tests with coverage, a web build, an Android debug build and a Trivy scan.
 
+## Branding
+
+The icon is a map pin on the brand green. `assets/branding/logo.svg` is the source; the four PNGs
+beside it are exports of it (the header of the SVG says how each variant differs). The platform
+files are generated, not hand-edited:
+
+```bash
+dart run flutter_launcher_icons              # Android (adaptive + monochrome), iOS, web icons
+dart run flutter_native_splash:create        # native launch screen for Android, iOS and web
+```
+
+Configuration lives in `pubspec.yaml`. Details that matter: the iOS icon has no alpha channel (an
+App Store rule), the adaptive foreground is sized for the generator's 16% inset so the pin sits
+inside Android's 66% safe zone, and the Android 12 splash uses its own artwork because the system
+crops that icon to a circle. The splash is also what the user sees while `main()` reads the session
+from the keychain.
+
+## Release signing
+
+### Android
+
+A release build is signed with an **upload key** that only you hold. Google Play requires every
+update to be signed with the same one, so **losing it means losing the ability to update the app**:
+keep a backup somewhere safe, and never commit it (`key.properties`, `*.jks` and `*.keystore` are
+git-ignored).
+
+```bash
+# 1. Create the key once (keep the file and both passwords safe)
+keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 \
+        -validity 10000 -alias upload
+
+# 2. Point the build at it
+cp android/key.properties.example android/key.properties   # then fill it in
+
+# 3. Build the bundle to upload to Google Play (the build number must grow every time)
+flutter build appbundle --release --build-number=2
+```
+
+Without `android/key.properties`, `flutter run --release` still works (it falls back to the debug
+key), but `flutter build appbundle --release` **refuses to build** and says why: such a bundle would
+be signed with the debug key, and Google Play rejects it. Enrolling in **Play App Signing** is
+recommended: Google then holds the real signing key and yours is only an upload key, which support
+can reset if it is ever lost.
+
+**From CI**: the `Release (Android)` workflow (manual, `workflow_dispatch`) builds the signed bundle
+from these repository secrets and attaches it as an artifact:
+
+| Secret                      | Value                                                       |
+| --------------------------- | ----------------------------------------------------------- |
+| `ANDROID_KEYSTORE_BASE64`   | `base64 -w0 ~/upload-keystore.jks`                          |
+| `ANDROID_KEYSTORE_PASSWORD` | the keystore password                                       |
+| `ANDROID_KEY_PASSWORD`      | the key password                                            |
+| `ANDROID_KEY_ALIAS`         | `upload`                                                    |
+
+The regular CI proves this wiring on every push with a **throwaway key** (the real one is never
+exposed to pull requests): it checks that a bundle without a key refuses to build, and that a release
+APK is signed by the key it was given and not by the debug one.
+
+### iOS
+
+Not configured. Signing an iOS app needs a Mac with Xcode and a paid Apple Developer Program
+account (a certificate and a provisioning profile). Open `ios/Runner.xcworkspace`, pick the team
+under *Signing & Capabilities* (automatic signing) and build with `flutter build ipa`. The bundle id
+is `com.ronybrand.estados`; change it if it is taken on your account.
+
 ## Development process
 
 Built test-first (red, green, refactor): the specs for each layer were written and run failing
@@ -130,7 +195,8 @@ semantics. That is not a device run.
 - **A run on an Android emulator or an iOS device**, and device-level e2e (Patrol, `integration_test`
   or Maestro). The Android and iOS projects exist and CI compiles the Android one, but the app was
   exercised through widget tests and the web build.
-- **Release signing, store assets and icons**: the launcher icon and splash are the template's.
+- **Store listings**: screenshots, descriptions and the privacy policy that Google Play and the App
+  Store ask for. **iOS signing** (see above) needs a Mac and an Apple account.
 - **CodeQL does not support Dart**, so there is no CodeQL workflow; Trivy covers dependencies,
   secrets and misconfiguration, and `flutter analyze` covers the code.
 

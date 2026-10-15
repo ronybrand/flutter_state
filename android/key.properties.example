@@ -1,0 +1,11 @@
+# Copy to android/key.properties (git-ignored) and fill in. Never commit the real file
+# or the keystore it points to: losing the key means no more updates on Google Play.
+#
+# Create the upload key once, and keep a backup somewhere safe:
+#   keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 \
+#           -validity 10000 -alias upload
+storePassword=<password of the keystore>
+keyPassword=<password of the key>
+keyAlias=upload
+# Absolute path, or relative to android/app
+storeFile=/home/you/upload-keystore.jks
