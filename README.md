@@ -42,6 +42,54 @@ conventions instead of the web or React Native ones.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    subgraph Device["Device (Flutter)"]
+        direction LR
+        UI["Screens + go_router
+(redirect guard)"]
+        Providers["Riverpod providers
+(search, sort, list, detail)"]
+        Auth["AuthController
+(Notifier)"]
+        Repos["Repositories
+(state, auth, info)"]
+        Dio["dio + interceptors
+(request id, retry, 401)"]
+        Tokens["TokenStore"]
+        Secure[("flutter_secure_storage
+(Keychain / Keystore)")]
+    end
+
+    subgraph EC2["Backend (EC2)"]
+        direction LR
+        App["estado-app
+(Spring Boot)"]
+        DB[("Postgres")]
+    end
+
+    Lambda["start-api Lambda
+(opened in the browser)"]
+
+    UI --> Providers
+    UI --> Auth
+    Providers --> Repos
+    Auth --> Repos
+    Repos --> Dio
+    Dio -- "HTTPS (API_URL)" --> App
+    App --> DB
+    Dio --> Tokens
+    Auth --> Tokens
+    Tokens --> Secure
+    UI -. "API unreachable:
+Turn on the API" .-> Lambda
+    Lambda -. "starts the instance" .-> EC2
+```
+
+The app talks straight to the API: a native app has no origin, so there is no BFF proxy. The dashed
+path is the [Turn on the API](#when-the-api-is-turned-off) link, shown only when the API does not
+answer.
+
 ```
 lib/
 ├── main.dart             # loads the token from the keychain, then runApp
