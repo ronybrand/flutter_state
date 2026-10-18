@@ -77,3 +77,13 @@ String fakeJwt({Duration expiresIn = const Duration(hours: 1), DateTime? now}) {
   final payload = base64Url.encode(utf8.encode(jsonEncode({'exp': exp})));
   return 'header.${payload.replaceAll('=', '')}.signature';
 }
+
+/// A real HTTP 500: unlike a response-less DioException, the app treats it as a
+/// backend failure, not as the API being unavailable.
+DioException serverError(String path) {
+  final options = RequestOptions(path: path);
+  return DioException(
+    requestOptions: options,
+    response: Response(requestOptions: options, statusCode: 500),
+  );
+}

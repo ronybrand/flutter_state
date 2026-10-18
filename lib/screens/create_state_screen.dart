@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/api_error_message.dart';
 import '../core/request_id.dart';
 import '../data/federative_unit.dart';
 import '../state/states_providers.dart';
@@ -40,7 +41,10 @@ class _CreateStateScreenState extends ConsumerState<CreateStateScreen> {
     } on Object catch (error) {
       if (mounted) {
         setState(() => _saving = false);
-        _errors.show('Failed to create state.', extractRequestId(error));
+        _errors.show(
+          apiErrorMessage(error, 'Failed to create state.'),
+          extractRequestId(error),
+        );
       }
     }
   }

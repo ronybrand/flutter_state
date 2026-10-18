@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
+import 'package:flutter_state/core/api_error_message.dart';
 import 'package:flutter_state/data/federative_unit.dart';
 import 'package:flutter_state/providers.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -95,6 +96,18 @@ void main() {
     });
 
     testWidgets('stays and shows an error when creation fails', (tester) async {
+      when(() => repository.create(any())).thenThrow(serverError('/estado/'));
+      await signedIn().pump(tester, location: '/state/new');
+
+      await fillAndSave(tester);
+
+      expect(find.text('Failed to create state.'), findsOneWidget);
+      expect(abbreviation, findsOneWidget);
+    });
+
+    testWidgets('says the API is unavailable when there is no response', (
+      tester,
+    ) async {
       when(() => repository.create(any())).thenThrow(
         DioException(requestOptions: RequestOptions(path: '/estado/')),
       );
@@ -102,8 +115,7 @@ void main() {
 
       await fillAndSave(tester);
 
-      expect(find.text('Failed to create state.'), findsOneWidget);
-      expect(abbreviation, findsOneWidget);
+      expect(find.text(apiUnavailableMessage), findsOneWidget);
     });
 
     testWidgets('meets the tap target, label and contrast rules', (
@@ -152,9 +164,7 @@ void main() {
     });
 
     testWidgets('shows an error when saving fails', (tester) async {
-      when(() => repository.update(any())).thenThrow(
-        DioException(requestOptions: RequestOptions(path: '/estado/3')),
-      );
+      when(() => repository.update(any())).thenThrow(serverError('/estado/3'));
       await signedIn().pump(tester, location: '/state/3/edit');
       await tester.enterText(name, 'São Paulo!');
       await tester.pump();
@@ -166,9 +176,7 @@ void main() {
     testWidgets('shows an error when the unit cannot be loaded', (
       tester,
     ) async {
-      when(() => repository.get(3)).thenThrow(
-        DioException(requestOptions: RequestOptions(path: '/estado/3')),
-      );
+      when(() => repository.get(3)).thenThrow(serverError('/estado/3'));
       await signedIn().pump(tester, location: '/state/3/edit');
       expect(find.text('Failed to fetch state.'), findsOneWidget);
     });
