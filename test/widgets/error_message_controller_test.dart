@@ -1,4 +1,5 @@
 import 'package:fake_async/fake_async.dart';
+import 'package:flutter_state/core/api_error_message.dart';
 import 'package:flutter_state/widgets/error_message_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -75,6 +76,17 @@ void main() {
         ..show('Boom')
         ..dispose();
       expect(async.pendingTimers, isEmpty);
+    });
+  });
+
+  test('keeps the API-unavailable message well past the default 5s', () {
+    fakeAsync((async) {
+      final controller = ErrorMessageController()..show(apiUnavailableMessage);
+      async.elapse(const Duration(milliseconds: 59999));
+      expect(controller.error, apiUnavailableMessage);
+      async.elapse(const Duration(milliseconds: 1));
+      expect(controller.error, isNull);
+      controller.dispose();
     });
   });
 }

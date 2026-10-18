@@ -15,6 +15,7 @@ dependencies:
   go_router: ^18.1.0
   intl: ^0.20.3
   package_info_plus: ^10.2.2
+  url_launcher: ^6.3.3
 
 dev_dependencies:
   flutter_test:
