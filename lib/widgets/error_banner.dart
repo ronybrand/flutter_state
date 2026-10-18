@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../core/api_error_message.dart';
 import '../theme.dart';
 
 class ErrorBanner extends StatelessWidget {
-  const ErrorBanner({required this.error, required this.requestId, super.key});
+  const ErrorBanner({
+    required this.error,
+    required this.requestId,
+    this.openLink,
+    super.key,
+  });
 
   final String? error;
   final String? requestId;
+
+  /// How the turn-on link is opened; defaults to the external browser. A
+  /// parameter so tests don't need the url_launcher platform channel.
+  final Future<void> Function(Uri uri)? openLink;
+
+  Future<void> _open(Uri uri) => (openLink ?? _openInBrowser)(uri);
+
+  static Future<void> _openInBrowser(Uri uri) =>
+      launchUrl(uri, mode: LaunchMode.externalApplication);
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +48,18 @@ class ErrorBanner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(message, style: const TextStyle(color: AppColors.danger)),
+            if (message == apiUnavailableMessage)
+              TextButton(
+                key: const Key('turn-on-api'),
+                onPressed: () => _open(Uri.parse(startApiUrl)),
+                child: const Text(
+                  'Turn on the API',
+                  style: TextStyle(
+                    color: AppColors.danger,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
             if (requestId != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),

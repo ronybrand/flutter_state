@@ -1,4 +1,5 @@
 import 'package:flutter/semantics.dart';
+import 'package:flutter_state/core/api_error_message.dart';
 import 'package:flutter_state/widgets/error_banner.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -43,5 +44,31 @@ void main() {
     final node = tester.getSemantics(find.byKey(const Key('error-banner')));
     expect(node.flagsCollection.isLiveRegion, isTrue);
     handle.dispose();
+  });
+
+  testWidgets('offers the turn-on link only when the API is unavailable', (
+    tester,
+  ) async {
+    final opened = <Uri>[];
+    await pumpWidgetUnderTest(
+      tester,
+      ErrorBanner(
+        error: apiUnavailableMessage,
+        requestId: null,
+        openLink: (uri) async => opened.add(uri),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('turn-on-api')));
+
+    expect(opened, [Uri.parse(startApiUrl)]);
+  });
+
+  testWidgets('shows no link for an ordinary error', (tester) async {
+    await pumpWidgetUnderTest(
+      tester,
+      const ErrorBanner(error: 'Failed', requestId: null),
+    );
+    expect(find.byKey(const Key('turn-on-api')), findsNothing);
   });
 }
