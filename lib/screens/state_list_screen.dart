@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../auth/auth_controller.dart';
+import '../core/api_error_message.dart';
 import '../core/request_id.dart';
 import '../data/federative_unit.dart';
 import '../state/states_providers.dart';
@@ -89,7 +90,10 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
     try {
       await ref.read(stateActionsProvider).delete(unit.id);
     } on Object catch (error) {
-      _errors.show('Failed to delete state.', extractRequestId(error));
+      _errors.show(
+        apiErrorMessage(error, 'Failed to delete state.'),
+        extractRequestId(error),
+      );
     } finally {
       if (mounted) setState(() => _deleting = false);
     }
@@ -99,7 +103,10 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
   Widget build(BuildContext context) {
     ref.listen(statesProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        _errors.show('Failed to fetch states.', extractRequestId(next.error!));
+        _errors.show(
+          apiErrorMessage(next.error!, 'Failed to fetch states.'),
+          extractRequestId(next.error!),
+        );
       }
     });
     final states = ref.watch(statesProvider);

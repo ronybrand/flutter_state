@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/api_error_message.dart';
 import '../core/request_id.dart';
 import '../data/federative_unit.dart';
 import '../state/states_providers.dart';
@@ -55,7 +56,10 @@ class _EditStateScreenState extends ConsumerState<EditStateScreen> {
     } on Object catch (error) {
       if (mounted) {
         setState(() => _saving = false);
-        _errors.show('Failed to update state.', extractRequestId(error));
+        _errors.show(
+          apiErrorMessage(error, 'Failed to update state.'),
+          extractRequestId(error),
+        );
       }
     }
   }
@@ -79,7 +83,7 @@ class _EditStateScreenState extends ConsumerState<EditStateScreen> {
         ?.map((u) => u.abbreviation)
         .toList();
     final loadError = loaded.hasError && !loaded.isLoading
-        ? 'Failed to fetch state.'
+        ? apiErrorMessage(loaded.error!, 'Failed to fetch state.')
         : null;
 
     return FormPage(

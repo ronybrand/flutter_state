@@ -251,9 +251,7 @@ void main() {
     });
 
     testWidgets('shows an error when deleting fails', (tester) async {
-      when(() => repository.delete(1)).thenThrow(
-        DioException(requestOptions: RequestOptions(path: '/estado/1')),
-      );
+      when(() => repository.delete(1)).thenThrow(serverError('/estado/1'));
       await AppHarness(overrides: overrides()).pump(tester);
       await pressDeleteSp(tester);
       await tester.tap(find.byKey(const Key('confirm-delete')));

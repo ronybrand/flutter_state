@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../auth/auth_controller.dart';
+import '../core/api_error_message.dart';
 import '../core/request_id.dart';
 import '../theme.dart';
 import '../widgets/error_message_controller.dart';
@@ -57,7 +58,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _inFlight = false;
       if (mounted) {
         setState(() => _submitting = false);
-        _errors.show('Invalid username or password.', extractRequestId(error));
+        _errors.show(
+          apiErrorMessage(error, 'Invalid username or password.'),
+          extractRequestId(error),
+        );
       }
     }
   }
