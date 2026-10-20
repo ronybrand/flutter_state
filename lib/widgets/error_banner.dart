@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/api_error_message.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../theme.dart';
 
 class ErrorBanner extends StatelessWidget {
@@ -28,6 +29,8 @@ class ErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final message = error;
     if (message == null) return const SizedBox.shrink();
+    final strings = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
 
     // A live region makes TalkBack and VoiceOver announce the text as soon as it
     // appears, without the user having to find it.
@@ -48,12 +51,15 @@ class ErrorBanner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(message, style: const TextStyle(color: AppColors.danger)),
-            if (message == apiUnavailableMessage)
+            if (message == strings.apiUnavailableMessage)
               TextButton(
                 key: const Key('turn-on-api'),
-                onPressed: () => _open(Uri.parse(startApiUrl)),
-                child: const Text(
-                  'Turn on the API',
+                onPressed: () => _open(
+                  Uri.parse(startApiUrl)
+                      .replace(queryParameters: {'lang': locale}),
+                ),
+                child: Text(
+                  strings.turnOnApi,
                   style: TextStyle(
                     color: AppColors.danger,
                     decoration: TextDecoration.underline,
@@ -64,7 +70,7 @@ class ErrorBanner extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  'Reference ID: $requestId',
+                  strings.referenceId(requestId!),
                   style: const TextStyle(color: AppColors.muted, fontSize: 12),
                 ),
               ),

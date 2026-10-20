@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/format_date.dart';
 import '../data/federative_unit.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../theme.dart';
 
 class StateListItem extends StatelessWidget {
@@ -20,6 +21,8 @@ class StateListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toString();
     const meta = TextStyle(fontSize: 12, color: AppColors.muted);
     return Card(
       margin: EdgeInsets.zero,
@@ -47,25 +50,31 @@ class StateListItem extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text('Created: ${formatDate(unit.createdAt)}', style: meta),
-            Text('Updated: ${formatDate(unit.updatedAt)}', style: meta),
+            Text(
+              strings.created(formatDate(unit.createdAt, locale: locale)),
+              style: meta,
+            ),
+            Text(
+              strings.updated(formatDate(unit.updatedAt, locale: locale)),
+              style: meta,
+            ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Semantics(
-                  label: 'Edit ${unit.abbreviation}',
+                  label: strings.editState(unit.abbreviation),
                   button: true,
                   excludeSemantics: true,
                   child: FilledButton.icon(
                     key: Key('edit-${unit.id}'),
                     onPressed: () => onEdit(unit),
                     icon: const Icon(Icons.edit, size: 18),
-                    label: const Text('Edit'),
+                    label: Text(strings.edit),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Semantics(
-                  label: 'Delete ${unit.abbreviation}',
+                  label: strings.deleteState(unit.abbreviation),
                   button: true,
                   excludeSemantics: true,
                   child: FilledButton.icon(
@@ -75,7 +84,7 @@ class StateListItem extends StatelessWidget {
                       backgroundColor: AppColors.danger,
                     ),
                     icon: const Icon(Icons.delete, size: 18),
-                    label: const Text('Delete'),
+                    label: Text(strings.delete),
                   ),
                 ),
               ],

@@ -1,0 +1,102 @@
+{
+  "@@locale": "en",
+  "appTitle": "Brazilian States",
+  "languageSwitchLabel": "Change language",
+  "languageSaveError": "Could not save the language preference.",
+  "languagePortuguese": "Português",
+  "languageEnglish": "English",
+  "logOut": "Log out",
+  "logIn": "Log in",
+  "newState": "New state",
+  "searchLabel": "Search by name or abbreviation",
+  "sortBy": "Sort by",
+  "sortAscending": "ascending",
+  "sortDescending": "descending",
+  "sortAbbreviation": "Abbreviation",
+  "sortName": "Name",
+  "tryAgain": "Try again",
+  "noStates": "No states registered.",
+  "createFirstState": "Create the first state",
+  "deleteStateTitle": "Delete state",
+  "confirmDeleteState": "Are you sure you want to delete {abbreviation}?",
+  "@confirmDeleteState": {
+    "placeholders": {
+      "abbreviation": { "type": "String" }
+    }
+  },
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "deleteState": "Delete {abbreviation}",
+  "@deleteState": {
+    "placeholders": {
+      "abbreviation": { "type": "String" }
+    }
+  },
+  "editState": "Edit {abbreviation}",
+  "@editState": {
+    "placeholders": {
+      "abbreviation": { "type": "String" }
+    }
+  },
+  "created": "Created: {date}",
+  "@created": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "updated": "Updated: {date}",
+  "@updated": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "loginTitle": "Login",
+  "username": "Username",
+  "password": "Password",
+  "logInButton": "Log in",
+  "demoCredentials": "Demo credentials (intentionally public): admin / Estado-Demo-2026",
+  "newStateTitle": "New state",
+  "editStateTitle": "Edit state",
+  "abbreviation": "Abbreviation",
+  "name": "Name",
+  "nameHint": "Enter the state name...",
+  "save": "Save",
+  "invalidState": "Invalid state.",
+  "abbreviationLengthError": "Enter the state abbreviation with 2 letters.",
+  "abbreviationFormatError": "Enter the state abbreviation with 2 uppercase letters.",
+  "duplicateAbbreviationError": "A state with this abbreviation already exists.",
+  "nameMinLengthError": "Enter the state name with at least 3 characters.",
+  "nameMaxLengthError": "Enter the state name with at most 100 characters.",
+  "invalidCredentialsError": "Invalid username or password.",
+  "loadStatesError": "Failed to fetch states.",
+  "loadStateError": "Failed to fetch state.",
+  "createStateError": "Failed to create state.",
+  "updateStateError": "Failed to update state.",
+  "deleteStateError": "Failed to delete state.",
+  "apiUnavailableMessage": "The API is offline (paused to save cost). Turn it on with the link below; it takes about 1 minute.",
+  "turnOnApi": "Turn on the API",
+  "referenceId": "Reference ID: {id}",
+  "@referenceId": {
+    "placeholders": {
+      "id": { "type": "String" }
+    }
+  },
+  "loading": "Loading",
+  "pageNotFound": "Page not found",
+  "pageNotFoundDescription": "The screen you are looking for does not exist.",
+  "backToHome": "Back to home",
+  "appVersion": "app {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "backendVersion": "back {commit} · {date}",
+  "@backendVersion": {
+    "placeholders": {
+      "commit": { "type": "String" },
+      "date": { "type": "String" }
+    }
+  }
+}

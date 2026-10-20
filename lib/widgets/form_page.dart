@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'error_banner.dart';
+import 'language_selector.dart';
 
 /// Shell shared by the create, edit and login screens.
 class FormPage extends StatelessWidget {
@@ -22,7 +23,7 @@ class FormPage extends StatelessWidget {
     return Scaffold(
       // Only the back arrow: the heading below already carries the title, and
       // repeating it in the bar would show it twice.
-      appBar: AppBar(),
+      appBar: AppBar(actions: [const LanguageSelector()]),
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,

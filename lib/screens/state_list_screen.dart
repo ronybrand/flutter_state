@@ -8,12 +8,14 @@ import '../auth/auth_controller.dart';
 import '../core/api_error_message.dart';
 import '../core/request_id.dart';
 import '../data/federative_unit.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../state/states_providers.dart';
 import '../theme.dart';
 import '../widgets/app_footer.dart';
 import '../widgets/error_banner.dart';
 import '../widgets/error_message_controller.dart';
 import '../widgets/loading_indicator.dart';
+import '../widgets/language_selector.dart';
 import '../widgets/sort_bar.dart';
 import '../widgets/state_list_item.dart';
 
@@ -66,21 +68,22 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
 
   // A dialog instead of deleting on tap: the destructive choice is explicit.
   Future<void> _confirmDelete(FederativeUnit unit) async {
+    final strings = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete state'),
-        content: Text('Are you sure you want to delete ${unit.abbreviation}?'),
+        title: Text(strings.deleteStateTitle),
+        content: Text(strings.confirmDeleteState(unit.abbreviation)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(strings.cancel),
           ),
           FilledButton(
             key: const Key('confirm-delete'),
             style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete'),
+            child: Text(strings.delete),
           ),
         ],
       ),
@@ -91,7 +94,11 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
       await ref.read(stateActionsProvider).delete(unit.id);
     } on Object catch (error) {
       _errors.show(
-        apiErrorMessage(error, 'Failed to delete state.'),
+        apiErrorMessage(
+          error,
+          strings.deleteStateError,
+          unavailableMessage: strings.apiUnavailableMessage,
+        ),
         extractRequestId(error),
       );
     } finally {
@@ -101,10 +108,15 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     ref.listen(statesProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
         _errors.show(
-          apiErrorMessage(next.error!, 'Failed to fetch states.'),
+          apiErrorMessage(
+            next.error!,
+            strings.loadStatesError,
+            unavailableMessage: strings.apiUnavailableMessage,
+          ),
           extractRequestId(next.error!),
         );
       }
@@ -114,7 +126,10 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
     final units = states.value;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Brazilian States')),
+      appBar: AppBar(
+        title: Text(strings.appTitle),
+        actions: const [LanguageSelector()],
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _refresh,
@@ -161,6 +176,7 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
   }
 
   Widget _header(SortState sort) {
+    final strings = AppLocalizations.of(context);
     final authenticated =
         ref.watch(authControllerProvider) == AuthStatus.authenticated;
     return Padding(
@@ -178,13 +194,13 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
                   key: const Key('log-out'),
                   onPressed: () =>
                       ref.read(authControllerProvider.notifier).signOut(),
-                  child: const Text('Log out'),
+                  child: Text(strings.logOut),
                 )
               else
                 OutlinedButton(
                   key: const Key('log-in'),
                   onPressed: () => context.push('/login'),
-                  child: const Text('Log in'),
+                  child: Text(strings.logIn),
                 ),
               FilledButton.icon(
                 key: const Key('new-state'),
@@ -193,7 +209,7 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
                 ),
                 onPressed: () => context.push('/state/new'),
                 icon: const Icon(Icons.add, size: 18),
-                label: const Text('New state'),
+                label: Text(strings.newState),
               ),
             ],
           ),
@@ -204,8 +220,8 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
             onChanged: _onSearchChanged,
             textInputAction: TextInputAction.search,
             autocorrect: false,
-            decoration: const InputDecoration(
-              labelText: 'Search by name or abbreviation',
+            decoration: InputDecoration(
+              labelText: strings.searchLabel,
               prefixIcon: Icon(Icons.search),
             ),
           ),
@@ -229,7 +245,7 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
           key: const Key('retry'),
           onPressed: _refresh,
           icon: const Icon(Icons.refresh, size: 18),
-          label: const Text('Try again'),
+          label: Text(AppLocalizations.of(context).tryAgain),
         ),
       ),
     );
@@ -240,15 +256,15 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
         children: [
-          const Text(
-            'No states registered.',
+          Text(
+            AppLocalizations.of(context).noStates,
             style: TextStyle(color: AppColors.muted),
           ),
           const SizedBox(height: 12),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: AppColors.success),
             onPressed: () => context.push('/state/new'),
-            child: const Text('Create the first state'),
+            child: Text(AppLocalizations.of(context).createFirstState),
           ),
         ],
       ),

@@ -5,8 +5,9 @@ const apiUnavailableMessage =
 
 /// Page served by the start-api Lambda (backend repo, ADR 0026): anti-bot
 /// challenge, starts the EC2 and waits for the API to come back. Opened in the
-/// browser, since the challenge widget needs one. ?lang=en: this app is
-/// English-only. No ?back: a native app has no web page to return to.
+/// browser, since the challenge widget needs one. The app sets the language
+/// query parameter for the selected locale. No ?back: a native app has no web
+/// page to return to.
 const startApiUrl =
     'https://pizowbnhivr3vholalz5r7ajta0mkvqn.lambda-url.us-east-1.on.aws/?lang=en';
 
@@ -21,5 +22,8 @@ bool isApiUnavailable(Object error) {
   return status == null || _gatewayStatuses.contains(status);
 }
 
-String apiErrorMessage(Object error, String fallback) =>
-    isApiUnavailable(error) ? apiUnavailableMessage : fallback;
+String apiErrorMessage(
+  Object error,
+  String fallback, {
+  String unavailableMessage = apiUnavailableMessage,
+}) => isApiUnavailable(error) ? unavailableMessage : fallback;

@@ -2,7 +2,22 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_state/core/app_locale.dart';
 import 'package:flutter_state/core/token_store.dart';
+
+class FakeLocalePreferenceStore implements LocalePreferenceStore {
+  String? language;
+  bool failWrites = false;
+
+  @override
+  String? readLanguage() => language;
+
+  @override
+  Future<void> writeLanguage(String language) async {
+    if (failWrites) throw StateError('preference store unavailable');
+    this.language = language;
+  }
+}
 
 /// In-memory stand-in for the platform keychain, with switches to simulate a
 /// locked or broken one.

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/api_error_message.dart';
 import '../core/request_id.dart';
 import '../data/federative_unit.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../state/states_providers.dart';
 import '../widgets/error_message_controller.dart';
 import '../widgets/form_page.dart';
@@ -41,8 +42,13 @@ class _CreateStateScreenState extends ConsumerState<CreateStateScreen> {
     } on Object catch (error) {
       if (mounted) {
         setState(() => _saving = false);
+        final strings = AppLocalizations.of(context);
         _errors.show(
-          apiErrorMessage(error, 'Failed to create state.'),
+          apiErrorMessage(
+            error,
+            strings.createStateError,
+            unavailableMessage: strings.apiUnavailableMessage,
+          ),
           extractRequestId(error),
         );
       }
@@ -51,13 +57,14 @@ class _CreateStateScreenState extends ConsumerState<CreateStateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final existing = ref
         .watch(statesProvider)
         .value
         ?.map((u) => u.abbreviation)
         .toList();
     return FormPage(
-      title: 'New state',
+      title: strings.newStateTitle,
       error: _errors.error,
       requestId: _errors.requestId,
       child: StateForm(

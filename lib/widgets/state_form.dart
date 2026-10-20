@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../data/federative_unit.dart';
 import '../data/validation.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class _UpperCase extends TextInputFormatter {
   @override
@@ -70,13 +71,13 @@ class _StateFormState extends State<StateForm> {
     super.dispose();
   }
 
-  String? get _abbreviationError => validateAbbreviation(
+  StateValidationError? get _abbreviationError => validateAbbreviation(
     _abbreviation.text,
     existing: widget.existingAbbreviations,
     current: widget.initialValues?.abbreviation,
   );
 
-  String? get _nameError => validateName(_name.text);
+  StateValidationError? get _nameError => validateName(_name.text);
 
   bool get _isDirty =>
       _abbreviation.text != (widget.initialValues?.abbreviation ?? '') ||
@@ -97,6 +98,22 @@ class _StateFormState extends State<StateForm> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+    final abbreviationError = switch (_abbreviationError) {
+      StateValidationError.abbreviationLength =>
+        strings.abbreviationLengthError,
+      StateValidationError.abbreviationFormat =>
+        strings.abbreviationFormatError,
+      StateValidationError.duplicateAbbreviation =>
+        strings.duplicateAbbreviationError,
+      _ => null,
+    };
+    final nameError = switch (_nameError) {
+      StateValidationError.nameTooShort => strings.nameMinLengthError,
+      StateValidationError.nameTooLong => strings.nameMaxLengthError,
+      _ => null,
+    };
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -109,8 +126,8 @@ class _StateFormState extends State<StateForm> {
           textInputAction: TextInputAction.next,
           inputFormatters: [_UpperCase(), LengthLimitingTextInputFormatter(2)],
           decoration: InputDecoration(
-            labelText: 'Abbreviation',
-            errorText: _abbreviationTouched ? _abbreviationError : null,
+            labelText: strings.abbreviation,
+            errorText: _abbreviationTouched ? abbreviationError : null,
           ),
         ),
         const SizedBox(height: 16),
@@ -121,9 +138,9 @@ class _StateFormState extends State<StateForm> {
           textCapitalization: TextCapitalization.words,
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
-            labelText: 'Name',
-            hintText: 'Enter the state name...',
-            errorText: _nameTouched ? _nameError : null,
+            labelText: strings.name,
+            hintText: strings.nameHint,
+            errorText: _nameTouched ? nameError : null,
           ),
         ),
         const SizedBox(height: 16),
@@ -133,7 +150,7 @@ class _StateFormState extends State<StateForm> {
             key: const Key('save'),
             onPressed: _canSave ? _submit : null,
             icon: const Icon(Icons.check, size: 18),
-            label: const Text('Save'),
+            label: Text(strings.save),
           ),
         ),
       ],

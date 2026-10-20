@@ -1,0 +1,102 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Estados Brasileiros",
+  "languageSwitchLabel": "Mudar idioma",
+  "languageSaveError": "Não foi possível salvar a preferência de idioma.",
+  "languagePortuguese": "Português",
+  "languageEnglish": "English",
+  "logOut": "Sair",
+  "logIn": "Entrar",
+  "newState": "Novo estado",
+  "searchLabel": "Buscar por nome ou sigla",
+  "sortBy": "Ordenar por",
+  "sortAscending": "crescente",
+  "sortDescending": "decrescente",
+  "sortAbbreviation": "Sigla",
+  "sortName": "Nome",
+  "tryAgain": "Tentar novamente",
+  "noStates": "Nenhum estado cadastrado.",
+  "createFirstState": "Criar o primeiro estado",
+  "deleteStateTitle": "Excluir estado",
+  "confirmDeleteState": "Tem certeza que deseja excluir {abbreviation}?",
+  "@confirmDeleteState": {
+    "placeholders": {
+      "abbreviation": { "type": "String" }
+    }
+  },
+  "cancel": "Cancelar",
+  "delete": "Excluir",
+  "edit": "Editar",
+  "deleteState": "Excluir {abbreviation}",
+  "@deleteState": {
+    "placeholders": {
+      "abbreviation": { "type": "String" }
+    }
+  },
+  "editState": "Editar {abbreviation}",
+  "@editState": {
+    "placeholders": {
+      "abbreviation": { "type": "String" }
+    }
+  },
+  "created": "Criado: {date}",
+  "@created": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "updated": "Atualizado: {date}",
+  "@updated": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "loginTitle": "Login",
+  "username": "Usuário",
+  "password": "Senha",
+  "logInButton": "Entrar",
+  "demoCredentials": "Credenciais de demonstração (intencionalmente públicas): admin / Estado-Demo-2026",
+  "newStateTitle": "Novo estado",
+  "editStateTitle": "Editar estado",
+  "abbreviation": "Sigla",
+  "name": "Nome",
+  "nameHint": "Digite o nome do estado...",
+  "save": "Salvar",
+  "invalidState": "Estado inválido.",
+  "abbreviationLengthError": "Digite a sigla do estado com 2 letras.",
+  "abbreviationFormatError": "Digite a sigla do estado com 2 letras maiúsculas.",
+  "duplicateAbbreviationError": "Já existe um estado cadastrado com essa sigla.",
+  "nameMinLengthError": "Digite o nome do estado com pelo menos 3 caracteres.",
+  "nameMaxLengthError": "Digite o nome do estado com no máximo 100 caracteres.",
+  "invalidCredentialsError": "Usuário ou senha inválidos.",
+  "loadStatesError": "Falha ao buscar estados.",
+  "loadStateError": "Falha ao buscar estado.",
+  "createStateError": "Falha ao criar estado.",
+  "updateStateError": "Falha ao atualizar estado.",
+  "deleteStateError": "Falha ao excluir estado.",
+  "apiUnavailableMessage": "A API está offline (pausada para reduzir custos). Ative-a pelo link abaixo; isso leva cerca de 1 minuto.",
+  "turnOnApi": "Ativar a API",
+  "referenceId": "ID de referência: {id}",
+  "@referenceId": {
+    "placeholders": {
+      "id": { "type": "String" }
+    }
+  },
+  "loading": "Carregando",
+  "pageNotFound": "Página não encontrada",
+  "pageNotFoundDescription": "A tela que você procura não existe.",
+  "backToHome": "Voltar ao início",
+  "appVersion": "app {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "backendVersion": "back {commit} · {date}",
+  "@backendVersion": {
+    "placeholders": {
+      "commit": { "type": "String" },
+      "date": { "type": "String" }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../auth/auth_controller.dart';
 import '../core/api_error_message.dart';
 import '../core/request_id.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../theme.dart';
 import '../widgets/error_message_controller.dart';
 import '../widgets/form_page.dart';
@@ -58,8 +59,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _inFlight = false;
       if (mounted) {
         setState(() => _submitting = false);
+        final strings = AppLocalizations.of(context);
         _errors.show(
-          apiErrorMessage(error, 'Invalid username or password.'),
+          apiErrorMessage(
+            error,
+            strings.invalidCredentialsError,
+            unavailableMessage: strings.apiUnavailableMessage,
+          ),
           extractRequestId(error),
         );
       }
@@ -68,8 +74,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     return FormPage(
-      title: 'Login',
+      title: strings.loginTitle,
       error: _errors.error,
       requestId: _errors.requestId,
       child: AutofillGroup(
@@ -82,7 +89,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               autocorrect: false,
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.username],
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: InputDecoration(labelText: strings.username),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -94,7 +101,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               textInputAction: TextInputAction.done,
               autofillHints: const [AutofillHints.password],
               onSubmitted: (_) => _submit(),
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(labelText: strings.password),
             ),
             const SizedBox(height: 16),
             Align(
@@ -108,12 +115,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Log in'),
+                    : Text(strings.logInButton),
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Demo credentials (intentionally public): admin / Estado-Demo-2026',
+            Text(
+              strings.demoCredentials,
               key: Key('demo-credentials'),
               style: TextStyle(fontSize: 13, color: AppColors.muted),
             ),
