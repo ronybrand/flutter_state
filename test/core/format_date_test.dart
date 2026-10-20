@@ -1,7 +1,10 @@
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_state/core/format_date.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  setUpAll(() => initializeDateFormatting('pt_BR'));
+
   test('formats like the web apps: MM/dd/yyyy, hh:mm:ss AM/PM', () {
     expect(
       formatDate(DateTime(2026, 1, 2, 3, 4, 5)),
@@ -15,6 +18,13 @@ void main() {
 
   test('shows a dash for a missing date', () {
     expect(formatDate(null), '-');
+  });
+
+  test('formats Brazilian Portuguese dates using day-first 24-hour time', () {
+    expect(
+      formatDate(DateTime(2026, 1, 2, 15, 4, 5), locale: 'pt'),
+      '02/01/2026, 15:04:05',
+    );
   });
 
   test('renders a UTC instant in local time', () {

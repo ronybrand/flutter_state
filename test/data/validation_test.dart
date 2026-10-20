@@ -10,23 +10,36 @@ void main() {
     });
 
     test('asks for 2 letters when the length is wrong', () {
-      const message = 'Enter the state abbreviation with 2 letters.';
-      expect(validateAbbreviation(null), message);
-      expect(validateAbbreviation(''), message);
-      expect(validateAbbreviation('S'), message);
-      expect(validateAbbreviation('SPX'), message);
+      expect(
+        validateAbbreviation(null),
+        StateValidationError.abbreviationLength,
+      );
+      expect(validateAbbreviation(''), StateValidationError.abbreviationLength);
+      expect(
+        validateAbbreviation('S'),
+        StateValidationError.abbreviationLength,
+      );
+      expect(
+        validateAbbreviation('SPX'),
+        StateValidationError.abbreviationLength,
+      );
     });
 
     test('asks for uppercase letters when the characters are wrong', () {
-      const message = 'Enter the state abbreviation with 2 uppercase letters.';
-      expect(validateAbbreviation('S1'), message);
-      expect(validateAbbreviation('--'), message);
+      expect(
+        validateAbbreviation('S1'),
+        StateValidationError.abbreviationFormat,
+      );
+      expect(
+        validateAbbreviation('--'),
+        StateValidationError.abbreviationFormat,
+      );
     });
 
     test('rejects an abbreviation that already exists', () {
       expect(
         validateAbbreviation('sp', existing: const ['SP', 'RJ']),
-        'A state with this abbreviation already exists.',
+        StateValidationError.duplicateAbbreviation,
       );
     });
 
@@ -40,7 +53,7 @@ void main() {
     test('another unit may not take it even while editing', () {
       expect(
         validateAbbreviation('RJ', existing: const ['SP', 'RJ'], current: 'SP'),
-        'A state with this abbreviation already exists.',
+        StateValidationError.duplicateAbbreviation,
       );
     });
   });
@@ -53,17 +66,13 @@ void main() {
     });
 
     test('asks for at least 3 characters', () {
-      const message = 'Enter the state name with at least 3 characters.';
-      expect(validateName(null), message);
-      expect(validateName(''), message);
-      expect(validateName('  AB  '), message);
+      expect(validateName(null), StateValidationError.nameTooShort);
+      expect(validateName(''), StateValidationError.nameTooShort);
+      expect(validateName('  AB  '), StateValidationError.nameTooShort);
     });
 
     test('asks for at most 100 characters', () {
-      expect(
-        validateName('A' * 101),
-        'Enter the state name with at most 100 characters.',
-      );
+      expect(validateName('A' * 101), StateValidationError.nameTooLong);
     });
   });
 

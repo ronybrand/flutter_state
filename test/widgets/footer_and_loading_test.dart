@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_state/l10n/generated/app_localizations.dart';
 import 'package:flutter_state/data/info_repository.dart';
 import 'package:flutter_state/providers.dart';
 import 'package:flutter_state/widgets/app_footer.dart';
@@ -17,7 +18,11 @@ Future<void> pumpFooter(
         appVersionProvider.overrideWith((ref) async => '1.2.3'),
         backendInfoProvider.overrideWith((ref) => backend()),
       ],
-      child: const MaterialApp(home: Scaffold(body: AppFooter())),
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(body: AppFooter()),
+      ),
     ),
   );
   await tester.pumpAndSettle();
@@ -50,7 +55,11 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     await tester.pumpWidget(
-      const MaterialApp(home: Scaffold(body: LoadingIndicator())),
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(body: LoadingIndicator()),
+      ),
     );
     expect(find.bySemanticsLabel('Loading'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);

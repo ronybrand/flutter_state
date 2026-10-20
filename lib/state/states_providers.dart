@@ -6,13 +6,12 @@ import '../providers.dart';
 /// The wire values are the backend's `sort` contract (sigla, nome); the labels
 /// are what the user reads.
 enum SortField {
-  abbreviation('sigla', 'Abbreviation'),
-  name('nome', 'Name');
+  abbreviation('sigla'),
+  name('nome');
 
-  const SortField(this.wire, this.label);
+  const SortField(this.wire);
 
   final String wire;
-  final String label;
 }
 
 enum SortDirection { asc, desc }
