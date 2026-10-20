@@ -6,6 +6,7 @@ import 'core/api_client.dart';
 import 'core/config.dart';
 import 'core/session_events.dart';
 import 'core/token_store.dart';
+import 'data/ask_repository.dart';
 import 'data/auth_repository.dart';
 import 'data/info_repository.dart';
 import 'data/state_repository.dart';
@@ -37,6 +38,10 @@ final dioProvider = Provider<Dio>(
 
 final stateRepositoryProvider = Provider<StateRepository>(
   (ref) => StateRepository(ref.watch(dioProvider)),
+);
+
+final askRepositoryProvider = Provider<AskRepository>(
+  (ref) => AskRepository(ref.watch(dioProvider)),
 );
 
 final authRepositoryProvider = Provider<AuthRepository>(

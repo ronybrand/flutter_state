@@ -13,6 +13,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Brazilian States';
 
   @override
+  String get askAiTitle => 'Ask about the Brazilian states';
+
+  @override
+  String get askAiHowItWorks =>
+      'AI agent (Spring AI + Gemini) queries the live backend API.';
+
+  @override
+  String get askAiLanguageLimitNote =>
+      'The assistant only understands questions in Portuguese or English.';
+
+  @override
+  String get askAiQuestionLabel => 'Your question';
+
+  @override
+  String get askAiPlaceholder =>
+      'E.g.: How many states are in the Southeast region?';
+
+  @override
+  String get askAiButton => 'Ask';
+
+  @override
+  String get askAiPendingButton => 'Asking...';
+
+  @override
+  String get askAiError => 'Failed to reach the AI assistant.';
+
+  @override
+  String get askAiSourceLink => 'View the AI agent source on GitHub';
+
+  @override
+  String get askAiSourceError => 'Could not open the AI agent source.';
+
+  @override
   String get languageSwitchLabel => 'Change language';
 
   @override

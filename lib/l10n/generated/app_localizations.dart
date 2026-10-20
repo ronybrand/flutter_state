@@ -104,6 +104,66 @@ abstract class AppLocalizations {
   /// **'Brazilian States'**
   String get appTitle;
 
+  /// No description provided for @askAiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about the Brazilian states'**
+  String get askAiTitle;
+
+  /// No description provided for @askAiHowItWorks.
+  ///
+  /// In en, this message translates to:
+  /// **'AI agent (Spring AI + Gemini) queries the live backend API.'**
+  String get askAiHowItWorks;
+
+  /// No description provided for @askAiLanguageLimitNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant only understands questions in Portuguese or English.'**
+  String get askAiLanguageLimitNote;
+
+  /// No description provided for @askAiQuestionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your question'**
+  String get askAiQuestionLabel;
+
+  /// No description provided for @askAiPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'E.g.: How many states are in the Southeast region?'**
+  String get askAiPlaceholder;
+
+  /// No description provided for @askAiButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get askAiButton;
+
+  /// No description provided for @askAiPendingButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Asking...'**
+  String get askAiPendingButton;
+
+  /// No description provided for @askAiError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reach the AI assistant.'**
+  String get askAiError;
+
+  /// No description provided for @askAiSourceLink.
+  ///
+  /// In en, this message translates to:
+  /// **'View the AI agent source on GitHub'**
+  String get askAiSourceLink;
+
+  /// No description provided for @askAiSourceError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the AI agent source.'**
+  String get askAiSourceError;
+
   /// No description provided for @languageSwitchLabel.
   ///
   /// In en, this message translates to:

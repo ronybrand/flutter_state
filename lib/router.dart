@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'auth/auth_controller.dart';
+import 'screens/ask_ai_screen.dart';
 import 'screens/create_state_screen.dart';
 import 'screens/edit_state_screen.dart';
 import 'screens/login_screen.dart';
@@ -34,6 +35,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/', builder: (_, _) => const StateListScreen()),
+      GoRoute(path: '/ask-ai', builder: (_, _) => const AskAiScreen()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/state/new', builder: (_, _) => const CreateStateScreen()),
       GoRoute(
