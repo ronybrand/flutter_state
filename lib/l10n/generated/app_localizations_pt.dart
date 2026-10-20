@@ -13,6 +13,41 @@ class AppLocalizationsPt extends AppLocalizations {
   String get appTitle => 'Estados Brasileiros';
 
   @override
+  String get askAiTitle => 'Pergunte sobre os estados brasileiros';
+
+  @override
+  String get askAiHowItWorks =>
+      'Agente de IA (Spring AI + Gemini) consulta a API real do backend em tempo real.';
+
+  @override
+  String get askAiLanguageLimitNote =>
+      'O assistente entende perguntas apenas em português ou inglês.';
+
+  @override
+  String get askAiQuestionLabel => 'Sua pergunta';
+
+  @override
+  String get askAiPlaceholder =>
+      'Ex.: Quantos estados existem na região Sudeste?';
+
+  @override
+  String get askAiButton => 'Perguntar';
+
+  @override
+  String get askAiPendingButton => 'Perguntando...';
+
+  @override
+  String get askAiError =>
+      'Falha ao consultar o assistente. Tente novamente em instantes.';
+
+  @override
+  String get askAiSourceLink => 'Ver código do agente de IA no GitHub';
+
+  @override
+  String get askAiSourceError =>
+      'Não foi possível abrir o código do agente de IA.';
+
+  @override
   String get languageSwitchLabel => 'Mudar idioma';
 
   @override

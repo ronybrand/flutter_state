@@ -202,6 +202,12 @@ class _StateListScreenState extends ConsumerState<StateListScreen> {
                   onPressed: () => context.push('/login'),
                   child: Text(strings.logIn),
                 ),
+              OutlinedButton.icon(
+                key: const Key('ask-ai'),
+                onPressed: () => context.push('/ask-ai'),
+                icon: const Icon(Icons.auto_awesome, size: 18),
+                label: Text(strings.askAiButton),
+              ),
               FilledButton.icon(
                 key: const Key('new-state'),
                 style: FilledButton.styleFrom(

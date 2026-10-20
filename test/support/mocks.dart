@@ -1,4 +1,5 @@
 import 'package:flutter_state/data/auth_repository.dart';
+import 'package:flutter_state/data/ask_repository.dart';
 import 'package:flutter_state/data/federative_unit.dart';
 import 'package:flutter_state/data/info_repository.dart';
 import 'package:flutter_state/data/state_repository.dart';
@@ -7,6 +8,8 @@ import 'package:mocktail/mocktail.dart';
 class MockStateRepository extends Mock implements StateRepository {}
 
 class MockAuthRepository extends Mock implements AuthRepository {}
+
+class MockAskRepository extends Mock implements AskRepository {}
 
 class MockInfoRepository extends Mock implements InfoRepository {}
 

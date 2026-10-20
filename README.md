@@ -11,6 +11,10 @@ It consumes the [Estado project](https://github.com/ronybrand/estado)'s REST API
 validation rules, the messages and the API contract are the same; the app follows Flutter
 conventions instead of the web or React Native ones.
 
+The app also includes **Ask AI**, matching the assistant available in the Angular and React
+clients. It sends Portuguese or English questions to the backend's `/ask` endpoint, displays
+selectable Markdown answers and never includes AI-provider credentials in the app.
+
 ## Screenshots
 
 <img src="docs/screenshot-state-list.png" alt="States list" width="300" />
@@ -26,6 +30,7 @@ conventions instead of the web or React Native ones.
 - Flutter's generated ARB localizations for Brazilian Portuguese and English
 - `shared_preferences` for the language choice; the device locale is used until the user selects one
 - [dio](https://pub.dev/packages/dio) with request-id, retry and 401 interceptors
+- [flutter_markdown_plus](https://pub.dev/packages/flutter_markdown_plus) for formatted AI answers
 - [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) (Keychain / Keystore)
 - `flutter_test` + [mocktail](https://pub.dev/packages/mocktail), `flutter_lints`
 
@@ -38,6 +43,7 @@ conventions instead of the web or React Native ones.
 | Auth "loading" state, or a hydration gate | Token read **before `runApp`**: the app starts already knowing who is signed in    |
 | Router guard that waits for auth          | `go_router` `redirect` + `refreshListenable`, re-run on every session change       |
 | `State` type                              | `FederativeUnit`: `State` is Flutter's own `State<T>`                              |
+| AI assistant at `/ask-ai` via `/ask`      | Localized question form, Markdown answer, request-id errors                        |
 | Table, `<dialog>` confirmation            | `ListView` + `RefreshIndicator`, `AlertDialog`                                    |
 | axe-core accessibility run                | Flutter's built-in tap target, label and contrast guidelines on every screen       |
 | Footer: frontend commit from version.json | App version from `pubspec.yaml` (`package_info_plus`)                              |
@@ -51,7 +57,7 @@ flowchart LR
         UI["Screens + go_router\n(redirect guard)"]
         Providers["Riverpod providers\n(search, sort, list, detail)"]
         Auth["AuthController\n(Notifier)"]
-        Repos["Repositories\n(state, auth, info)"]
+        Repos["Repositories\n(state, auth, info, ask)"]
         Dio["dio + interceptors\n(request id, retry, 401)"]
         Tokens["TokenStore"]
         Secure[("flutter_secure_storage\n(Keychain / Keystore)")]
@@ -94,9 +100,9 @@ lib/
 │                           request_id, session_events, format_date
 ├── auth/                 # AuthController (Notifier) and ExpiryTimer
 ├── data/                 # FederativeUnit + anti-corruption mapping, validation,
-│                           state/auth/info repositories
+│                           state/auth/info/AI repositories
 ├── state/                # search, sort, list and detail providers, StateActions
-├── screens/              # list, login, create, edit, not-found
+├── screens/              # list, ask AI, login, create, edit, not-found
 └── widgets/              # StateForm, StateListItem, SortBar, ErrorBanner, AppFooter, FormPage, ...
 
 test/                     # mirrors lib/; support/ holds fakes, mocks and the app harness
